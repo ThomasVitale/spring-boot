@@ -18,37 +18,35 @@ package org.springframework.boot.opentelemetry.testcontainers;
 
 import org.testcontainers.grafana.LgtmStackContainer;
 
-import org.springframework.boot.opentelemetry.autoconfigure.logging.OpenTelemetryLoggingConnectionDetails;
 import org.springframework.boot.opentelemetry.autoconfigure.export.otlp.Transport;
+import org.springframework.boot.opentelemetry.autoconfigure.metrics.export.otlp.OtlpMetricsConnectionDetails;
 import org.springframework.boot.testcontainers.service.connection.ContainerConnectionDetailsFactory;
 import org.springframework.boot.testcontainers.service.connection.ContainerConnectionSource;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 
 /**
- * {@link ContainerConnectionDetailsFactory} to create
- * {@link OpenTelemetryLoggingConnectionDetails} from a
- * {@link ServiceConnection @ServiceConnection}-annotated {@link LgtmStackContainer} using
- * the {@code "grafana/otel-lgtm"} image.
+ * Factory for creating {@link OtlpMetricsConnectionDetails} for Grafana LGTM containers
+ * using the {@code "grafana/otel-lgtm"} image.
  *
- * @author Eddú Meléndez
+ * @author Thomas Vitale
+ * @since 4.0.0
  */
-class GrafanaOpenTelemetryLoggingContainerConnectionDetailsFactory
-		extends ContainerConnectionDetailsFactory<LgtmStackContainer, OpenTelemetryLoggingConnectionDetails> {
+class GrafanaOtlpMetricsContainerConnectionDetailsFactory
+		extends ContainerConnectionDetailsFactory<LgtmStackContainer, OtlpMetricsConnectionDetails> {
 
-	GrafanaOpenTelemetryLoggingContainerConnectionDetailsFactory() {
+	GrafanaOtlpMetricsContainerConnectionDetailsFactory() {
 		super(ANY_CONNECTION_NAME);
 	}
 
 	@Override
-	protected OpenTelemetryLoggingConnectionDetails getContainerConnectionDetails(
+	protected OtlpMetricsConnectionDetails getContainerConnectionDetails(
 			ContainerConnectionSource<LgtmStackContainer> source) {
-		return new OpenTelemetryLoggingContainerConnectionDetails(source);
+		return new GrafanaOtlpMetricsContainerConnectionDetails(source);
 	}
 
-	private static final class OpenTelemetryLoggingContainerConnectionDetails
-			extends ContainerConnectionDetails<LgtmStackContainer> implements OpenTelemetryLoggingConnectionDetails {
+	private static final class GrafanaOtlpMetricsContainerConnectionDetails
+			extends ContainerConnectionDetails<LgtmStackContainer> implements OtlpMetricsConnectionDetails {
 
-		private OpenTelemetryLoggingContainerConnectionDetails(ContainerConnectionSource<LgtmStackContainer> source) {
+		private GrafanaOtlpMetricsContainerConnectionDetails(ContainerConnectionSource<LgtmStackContainer> source) {
 			super(source);
 		}
 
@@ -58,7 +56,7 @@ class GrafanaOpenTelemetryLoggingContainerConnectionDetailsFactory
 				case HTTP -> getContainer().getOtlpHttpUrl();
 				case GRPC -> getContainer().getOtlpGrpcUrl();
 			};
-			return "%s/v1/logs".formatted(url);
+			return transport == Transport.HTTP ? url + METRICS_PATH : url;
 		}
 
 	}

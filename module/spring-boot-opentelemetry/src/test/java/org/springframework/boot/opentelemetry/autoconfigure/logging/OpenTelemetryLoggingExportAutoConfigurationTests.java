@@ -35,6 +35,7 @@ import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.context.annotation.ImportCandidates;
 import org.springframework.boot.opentelemetry.autoconfigure.OpenTelemetrySdkAutoConfiguration;
 import org.springframework.boot.opentelemetry.autoconfigure.SdkLoggerProviderBuilderCustomizer;
+import org.springframework.boot.opentelemetry.autoconfigure.export.otlp.Transport;
 import org.springframework.boot.opentelemetry.autoconfigure.logging.OpenTelemetryLoggingConnectionDetailsConfiguration.PropertiesOpenTelemetryLoggingConnectionDetails;
 import org.springframework.boot.test.context.FilteredClassLoader;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;

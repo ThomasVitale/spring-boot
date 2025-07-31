@@ -19,38 +19,33 @@ package org.springframework.boot.opentelemetry.docker.compose;
 import org.springframework.boot.docker.compose.core.RunningService;
 import org.springframework.boot.docker.compose.service.connection.DockerComposeConnectionDetailsFactory;
 import org.springframework.boot.docker.compose.service.connection.DockerComposeConnectionSource;
-import org.springframework.boot.opentelemetry.autoconfigure.logging.OpenTelemetryLoggingConnectionDetails;
 import org.springframework.boot.opentelemetry.autoconfigure.export.otlp.Transport;
+import org.springframework.boot.opentelemetry.autoconfigure.metrics.export.otlp.OtlpMetricsConnectionDetails;
 
 /**
  * {@link DockerComposeConnectionDetailsFactory} to create
- * {@link OpenTelemetryLoggingConnectionDetails} for an OTLP service.
+ * {@link OtlpMetricsConnectionDetails} for an OTLP service.
  *
- * @author Eddú Meléndez
+ * @author Thomas Vitale
  */
-class OpenTelemetryLoggingDockerComposeConnectionDetailsFactory
-		extends DockerComposeConnectionDetailsFactory<OpenTelemetryLoggingConnectionDetails> {
+class OtlpMetricsDockerComposeConnectionDetailsFactory
+		extends DockerComposeConnectionDetailsFactory<OtlpMetricsConnectionDetails> {
 
 	private static final String[] OPENTELEMETRY_IMAGE_NAMES = { "otel/opentelemetry-collector-contrib",
 			"grafana/otel-lgtm" };
 
-	private static final int OTLP_GRPC_PORT = 4317;
-
-	private static final int OTLP_HTTP_PORT = 4318;
-
-	OpenTelemetryLoggingDockerComposeConnectionDetailsFactory() {
+	OtlpMetricsDockerComposeConnectionDetailsFactory() {
 		super(OPENTELEMETRY_IMAGE_NAMES,
-				"org.springframework.boot.opentelemetry.autoconfigure.logging.OpenTelemetryLoggingExportAutoConfiguration");
+				"org.springframework.boot.opentelemetry.autoconfigure.metrics.export.OpenTelemetryMetricsExporterAutoConfiguration");
 	}
 
 	@Override
-	protected OpenTelemetryLoggingConnectionDetails getDockerComposeConnectionDetails(
-			DockerComposeConnectionSource source) {
-		return new OpenTelemetryLoggingDockerComposeConnectionDetails(source.getRunningService());
+	protected OtlpMetricsConnectionDetails getDockerComposeConnectionDetails(DockerComposeConnectionSource source) {
+		return new OtlpMetricsDockerComposeConnectionDetails(source.getRunningService());
 	}
 
-	private static final class OpenTelemetryLoggingDockerComposeConnectionDetails extends DockerComposeConnectionDetails
-			implements OpenTelemetryLoggingConnectionDetails {
+	private static final class OtlpMetricsDockerComposeConnectionDetails extends DockerComposeConnectionDetails
+			implements OtlpMetricsConnectionDetails {
 
 		private final String host;
 
@@ -58,20 +53,19 @@ class OpenTelemetryLoggingDockerComposeConnectionDetailsFactory
 
 		private final int httpPort;
 
-		private OpenTelemetryLoggingDockerComposeConnectionDetails(RunningService source) {
+		private OtlpMetricsDockerComposeConnectionDetails(RunningService source) {
 			super(source);
 			this.host = source.host();
-			this.grpcPort = source.ports().get(OTLP_GRPC_PORT);
-			this.httpPort = source.ports().get(OTLP_HTTP_PORT);
+			this.grpcPort = source.ports().get(DEFAULT_GRPC_PORT);
+			this.httpPort = source.ports().get(DEFAULT_HTTP_PORT);
 		}
 
 		@Override
 		public String getUrl(Transport transport) {
-			int port = switch (transport) {
-				case HTTP -> this.httpPort;
-				case GRPC -> this.grpcPort;
+			return switch (transport) {
+				case HTTP -> "http://%s:%d%s".formatted(this.host, this.httpPort, METRICS_PATH);
+				case GRPC -> "http://%s:%d".formatted(this.host, this.grpcPort);
 			};
-			return "http://%s:%d/v1/logs".formatted(this.host, port);
 		}
 
 	}

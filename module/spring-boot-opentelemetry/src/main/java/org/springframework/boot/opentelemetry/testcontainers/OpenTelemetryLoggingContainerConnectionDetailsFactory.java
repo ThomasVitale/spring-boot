@@ -20,7 +20,7 @@ import org.testcontainers.containers.Container;
 import org.testcontainers.containers.GenericContainer;
 
 import org.springframework.boot.opentelemetry.autoconfigure.logging.OpenTelemetryLoggingConnectionDetails;
-import org.springframework.boot.opentelemetry.autoconfigure.logging.Transport;
+import org.springframework.boot.opentelemetry.autoconfigure.export.otlp.Transport;
 import org.springframework.boot.testcontainers.service.connection.ContainerConnectionDetailsFactory;
 import org.springframework.boot.testcontainers.service.connection.ContainerConnectionSource;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;

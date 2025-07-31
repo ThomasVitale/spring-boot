@@ -14,24 +14,20 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.opentelemetry.autoconfigure.logging;
+package org.springframework.boot.opentelemetry.autoconfigure.export;
+
+import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 /**
- * Transport used to send OTLP log data.
+ * {@link EnableAutoConfiguration Auto-configuration} for OpenTelemetry exporters.
  *
- * @author Moritz Halbritter
+ * @author Thomas Vitale
  * @since 4.0.0
  */
-public enum Transport {
-
-	/**
-	 * HTTP transport.
-	 */
-	HTTP,
-
-	/**
-	 * gRPC transport.
-	 */
-	GRPC
+@AutoConfiguration
+@EnableConfigurationProperties(OpenTelemetryExporterProperties.class)
+public final class OpenTelemetryExporterAutoConfiguration {
 
 }

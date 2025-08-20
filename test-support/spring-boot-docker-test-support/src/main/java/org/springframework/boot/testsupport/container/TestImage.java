@@ -118,7 +118,7 @@ public enum TestImage {
 	/**
 	 * A container image suitable for testing Grafana OTel LGTM.
 	 */
-	GRAFANA_OTEL_LGTM("grafana/otel-lgtm", "0.6.0", () -> LgtmStackContainer.class,
+	GRAFANA_OTEL_LGTM("grafana/otel-lgtm", "0.11.6", () -> LgtmStackContainer.class,
 			(container) -> ((LgtmStackContainer) container).withStartupTimeout(Duration.ofMinutes(2))),
 
 	/**
@@ -194,7 +194,7 @@ public enum TestImage {
 	/**
 	 * A container image suitable for testing Opentelemetry.
 	 */
-	OPENTELEMETRY("otel/opentelemetry-collector-contrib", "0.75.0"),
+	OPENTELEMETRY("otel/opentelemetry-collector-contrib", "0.131.0"),
 
 	/**
 	 * A container image suitable for testing Postgres.

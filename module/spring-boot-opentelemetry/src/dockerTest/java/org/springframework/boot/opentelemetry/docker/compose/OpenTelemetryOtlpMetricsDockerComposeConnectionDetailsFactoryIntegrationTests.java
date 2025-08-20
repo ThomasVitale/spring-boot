@@ -17,24 +17,24 @@
 package org.springframework.boot.opentelemetry.docker.compose;
 
 import org.springframework.boot.docker.compose.service.connection.test.DockerComposeTest;
-import org.springframework.boot.opentelemetry.autoconfigure.logging.OpenTelemetryLoggingConnectionDetails;
 import org.springframework.boot.opentelemetry.autoconfigure.export.otlp.Transport;
+import org.springframework.boot.opentelemetry.autoconfigure.metrics.export.otlp.OtlpMetricsConnectionDetails;
 import org.springframework.boot.testsupport.container.TestImage;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Integration tests for
- * {@link OpenTelemetryLoggingDockerComposeConnectionDetailsFactory}.
+ * Integration tests for {@link OtlpMetricsDockerComposeConnectionDetailsFactory}.
  *
- * @author Eddú Meléndez
+ * @author Thomas Vitale
  */
-class OpenTelemetryLoggingDockerComposeConnectionDetailsFactoryIntegrationTests {
+class OpenTelemetryOtlpMetricsDockerComposeConnectionDetailsFactoryIntegrationTests {
 
 	@DockerComposeTest(composeFile = "otlp-compose.yaml", image = TestImage.OPENTELEMETRY)
-	void runCreatesConnectionDetails(OpenTelemetryLoggingConnectionDetails connectionDetails) {
-		assertThat(connectionDetails.getUrl(Transport.HTTP)).startsWith("http://").endsWith("/v1/logs");
-		assertThat(connectionDetails.getUrl(Transport.GRPC)).startsWith("http://").endsWith("/v1/logs");
+	void runCreatesConnectionDetails(OtlpMetricsConnectionDetails connectionDetails) {
+		assertThat(connectionDetails.getUrl(Transport.HTTP)).startsWith("http://")
+			.endsWith(OtlpMetricsConnectionDetails.METRICS_PATH);
+		assertThat(connectionDetails.getUrl(Transport.GRPC)).startsWith("http://");
 	}
 
 }

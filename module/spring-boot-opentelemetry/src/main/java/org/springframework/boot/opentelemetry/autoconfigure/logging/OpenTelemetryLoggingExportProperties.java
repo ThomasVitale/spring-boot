@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.opentelemetry.autoconfigure.export.otlp.Transport;
 
 /**
  * Configuration properties for exporting logs using OpenTelemetry.

@@ -14,24 +14,22 @@
  * limitations under the License.
  */
 
-package org.springframework.boot.opentelemetry.autoconfigure.logging;
+package org.springframework.boot.opentelemetry.autoconfigure.export.otlp;
 
 import org.springframework.boot.autoconfigure.service.connection.ConnectionDetails;
-import org.springframework.boot.opentelemetry.autoconfigure.export.otlp.Transport;
 
 /**
- * Details required for actuator to establish a connection to an OpenTelemetry logging
- * service.
+ * Connection details to establish a connection to an OTLP endpoint.
  *
- * @author Toshiaki Maki
+ * @author Thomas Vitale
  * @since 4.0.0
  */
-public interface OpenTelemetryLoggingConnectionDetails extends ConnectionDetails {
+public interface OtlpConnectionDetails extends ConnectionDetails {
 
 	/**
-	 * Address to where logs will be published.
-	 * @param transport the transport to use
-	 * @return the address to where logs will be published
+	 * Address where the observability signals will be published.
+	 * @param transport the transport to use for OTLP
+	 * @return the address where the observability signals will be published
 	 */
 	String getUrl(Transport transport);
 
